@@ -36,6 +36,12 @@ export default {
                             title: "设置",
                             element: lazy(() => import('../pages/chats/tabs/settings')),
                         },
+                        {
+                            path: "/message",
+                            name: "Message",
+                            title: "消息",
+                            element: lazy(() => import('../pages/chats/tabs/message')),
+                        },
                     ],
                 },
                 /*

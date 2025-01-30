@@ -1,6 +1,7 @@
 import { IndexBar, List, SwipeAction } from 'antd-mobile';
 import { Action } from 'antd-mobile/es/components/swipe-action';
 import React from 'react';
+import { useNavigate } from 'react-router';
 
 // 生成随机字母的函数
 const getRandomLetter = (): string => {
@@ -42,6 +43,7 @@ const groups = Array(26)
 
 
 const Chats: React.FC = () => {
+    const navigate = useNavigate();
     const leftActions: Action[] = [
         {
             key: 'pin',
@@ -67,6 +69,10 @@ const Chats: React.FC = () => {
         },
     ]
 
+    const handleListItem = () => {
+        navigate('/im/message');
+    }
+
 
     return (
         <IndexBar style={{ width: '100vw' }}>
@@ -81,7 +87,7 @@ const Chats: React.FC = () => {
                                     leftActions={leftActions}
                                     rightActions={rightActions}
                                 >
-                                    <List.Item>{item}</List.Item>
+                                    <List.Item onClick={handleListItem}>{item}</List.Item>
                                 </SwipeAction>
                             ))}
                         </List>

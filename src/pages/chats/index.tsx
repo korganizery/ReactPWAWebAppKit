@@ -37,7 +37,7 @@ export default function Home() {
             }
         })[0].routes;
 
-        const tabs = route?.[0].routes.map((route) => ({
+        const tabs = route?.[0]?.routes?.map((route) => ({
             ...route,
             path: `/im${route.path}`,
         })) || [];
@@ -77,21 +77,23 @@ export default function Home() {
                 <Outlet />
             </div>
 
+            {pathname !== '/im/message' ? (
+                <div className={styles.bottom}>
+                    <TabBar safeArea activeKey={pathname} onChange={value => setRouteActive(value)}>
+                        {tabs.map(item => {
+                            return item.path !== '/im/message' ? (
+                                <TabBar.Item
+                                    key={item.path}
+                                    icon={getIcon(item.path, "icon")}
+                                    title={item.title}
+                                    badge={getIcon(item.path, "badge")}
+                                />
+                            ) : null
+                        })}
+                    </TabBar>
+                </div>
+            ) : null}
 
-            <div className={styles.bottom}>
-                <TabBar safeArea activeKey={pathname} onChange={value => setRouteActive(value)}>
-                    {tabs.map(item => {
-                        return (
-                            <TabBar.Item
-                                key={item.path}
-                                icon={getIcon(item.path, "icon")}
-                                title={item.title}
-                                badge={getIcon(item.path, "badge")}
-                            />
-                        )
-                    })}
-                </TabBar>
-            </div>
         </>
     )
 }

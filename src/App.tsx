@@ -138,7 +138,11 @@ function App() {
 
   const handleOnBack = () => {
     if (location.pathname.includes("/im")) {
-      navigate('/');
+      if (location.pathname === "/im/message") {
+        navigate(-1);
+      } else {
+        navigate('/');
+      }
     } else {
       navigate(-1);
     }
@@ -146,9 +150,8 @@ function App() {
 
   return (
     <>
-
       {location.pathname.includes("/im") ? (
-        <NavBar back={"Home"} onBack={handleOnBack}>title</NavBar>
+        <NavBar back={location.pathname === "/im/message" ? "Back" : "Home"} onBack={handleOnBack}>title</NavBar>
       ) : (
         <>
           <NoticeBar content='consequat eu pariatur mollit enim et eu deserunt nostrud officia ipsum irure eu non sint elit Lorem id aliquip non' color='alert' />
