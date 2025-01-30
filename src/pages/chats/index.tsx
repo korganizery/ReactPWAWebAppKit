@@ -25,13 +25,10 @@ export default function Home() {
     const [tabs, setTabs] = useState<TabItem[]>([]);
 
     const setRouteActive = (value: string) => {
-        console.log("value=========", value);
-
         navigate(value);
     }
 
     useLayoutEffect(() => {
-        // const route = routes[0].filter(item => item.path === "/im")[0].routes;
         const route = routes.filter((route) => {
             if (route.path === "/") {
                 if (route.routes) {
@@ -40,16 +37,10 @@ export default function Home() {
             }
         })[0].routes;
 
-
-
         const tabs = route?.[0].routes.map((route) => ({
             ...route,
-            path: `/im/${route.path}`,
+            path: `/im${route.path}`,
         })) || [];
-
-        // const tabs = route?.[0].routes || [];
-
-        console.log("====222000===", tabs);
 
         setTabs(tabs);
     }, [routes]);

@@ -19,19 +19,19 @@ export default {
                     routes: [
                         {
                             index: true,
-                            path: "contacts",
+                            path: "/contacts",
                             name: "Contacts",
                             title: "联系人",
                             element: lazy(() => import('../pages/chats/tabs/contacts')),
                         },
                         {
-                            path: "chats",
+                            path: "/chats",
                             name: "Chats",
                             title: "聊天",
                             element: lazy(() => import('../pages/chats/tabs/chats')),
                         },
                         {
-                            path: "settings",
+                            path: "/settings",
                             name: "Settings",
                             title: "设置",
                             element: lazy(() => import('../pages/chats/tabs/settings')),
