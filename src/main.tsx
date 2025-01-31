@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import store from './models/store'
 import App from './App.tsx'
 import { subscribeUser } from './pwa/pushNotifications';
+import './styles/global.less'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

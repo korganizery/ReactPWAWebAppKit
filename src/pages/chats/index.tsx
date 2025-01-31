@@ -7,7 +7,7 @@ import {
 import { JSX, useEffect, useLayoutEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from "react-router";
 import config from '../../configs';
-import styles from './styles.module.scss';
+import styles from './styles.module.less';
 
 interface TabItem {
     path: string;
@@ -72,13 +72,13 @@ export default function Home() {
     }
 
     return (
-        <>
-            <div className={styles.body}>
+        <div className={styles.tabs}>
+            <div className="body">
                 <Outlet />
             </div>
 
             {pathname !== '/im/message' ? (
-                <div className={styles.bottom}>
+                <div className="bottom">
                     <TabBar safeArea activeKey={pathname} onChange={value => setRouteActive(value)}>
                         {tabs.map(item => {
                             return item.path !== '/im/message' ? (
@@ -94,7 +94,7 @@ export default function Home() {
                 </div>
             ) : null}
 
-        </>
+        </div>
     )
 }
 

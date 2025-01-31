@@ -1,101 +1,125 @@
-import { IndexBar, List, SwipeAction } from 'antd-mobile';
-import { Action } from 'antd-mobile/es/components/swipe-action';
-import React from 'react';
-import { useNavigate } from 'react-router';
+import {
+  List,
+  SwipeAction,
+  InfiniteScroll,
+  Image,
+  PullToRefresh,
+} from "antd-mobile";
+import { Action } from "antd-mobile/es/components/swipe-action";
+import { sleep } from "antd-mobile/es/utils/sleep";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { PullStatus } from "antd-mobile/es/components/pull-to-refresh";
+import { mockRequest } from "./mock-request";
+import styles from "./index.module.less"
 
-// 生成随机字母的函数
-const getRandomLetter = (): string => {
-    const letters = 'abcdefghijklmnopqrstuvwxyz';
-    return letters[Math.floor(Math.random() * letters.length)];
+type TItem = {
+  avatar: string;
+  name: string;
+  description: string;
+};
+const item: TItem = {
+  avatar:
+    "https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
+  name: "Novalee Spicer",
+  description: "Deserunt dolor ea eaque eos",
 };
 
-// 生成随机单词的函数
-const getRandomWord = (length: number): string => {
-    let word = '';
-    for (let i = 0; i < length; i++) {
-        word += getRandomLetter();
-    }
-    return word;
+const rowCount = 1000;
+
+const list = Array(rowCount).fill(item);
+
+const statusRecord: Record<PullStatus, string> = {
+  pulling: "用力拉",
+  canRelease: "松开吧",
+  refreshing: "玩命加载中...",
+  complete: "好啦",
 };
-
-// 生成随机句子的函数
-const getRandomSentence = (minWords: number, maxWords: number): string => {
-    const wordCount = Math.floor(Math.random() * (maxWords - minWords + 1)) + minWords;
-    let sentence = '';
-    for (let i = 0; i < wordCount; i++) {
-        sentence += getRandomWord(Math.floor(Math.random() * 6) + 3) + ' ';
-    }
-    return sentence.trim();
-};
-
-// 根据需要生成随机单词列表
-const getRandomList = (min: number, max: number): string[] => {
-    return new Array(Math.floor(Math.random() * (max - min) + min)).fill('').map(() => getRandomSentence(2, 5));
-};
-
-const charCodeOfA = 'A'.charCodeAt(0);
-const groups = Array(26)
-    .fill('')
-    .map((_, i) => ({
-        title: String.fromCharCode(charCodeOfA + i),
-        items: getRandomList(3, 10),
-    }));
-
 
 const Chats: React.FC = () => {
-    const navigate = useNavigate();
-    const leftActions: Action[] = [
-        {
-            key: 'pin',
-            text: '置顶',
-            color: 'primary',
-        },
-    ]
-    const rightActions: Action[] = [
-        {
-            key: 'unsubscribe',
-            text: '取消关注',
-            color: 'light',
-        },
-        {
-            key: 'mute',
-            text: '免打扰',
-            color: 'warning',
-        },
-        {
-            key: 'delete',
-            text: '删除',
-            color: 'danger',
-        },
-    ]
+  const navigate = useNavigate();
+  const [data, setData] = useState<TItem[]>([]);
+  const [hasMore, setHasMore] = useState(true);
 
-    const handleListItem = () => {
-        navigate('/im/message');
-    }
+  async function loadMore() {
+    const append = await mockRequest();
+    setData((val) => [...val, ...append]);
+    setHasMore(append.length > 0);
+  }
 
+  const leftActions: Action[] = [
+    {
+      key: "pin",
+      text: "置顶",
+      color: "primary",
+    },
+  ];
+  const rightActions: Action[] = [
+    {
+      key: "unsubscribe",
+      text: "取消关注",
+      color: "light",
+    },
+    {
+      key: "mute",
+      text: "免打扰",
+      color: "warning",
+    },
+    {
+      key: "delete",
+      text: "删除",
+      color: "danger",
+    },
+  ];
 
-    return (
-        <IndexBar style={{ width: '100vw' }}>
-            {groups.map((group) => {
-                const { title, items } = group;
-                return (
-                    <IndexBar.Panel index={title} title={`标题${title}`} key={`标题${title}`}>
-                        <List>
-                            {items.map((item, index) => (
-                                <SwipeAction
-                                    key={index}
-                                    leftActions={leftActions}
-                                    rightActions={rightActions}
-                                >
-                                    <List.Item onClick={handleListItem}>{item}</List.Item>
-                                </SwipeAction>
-                            ))}
-                        </List>
-                    </IndexBar.Panel>
-                );
-            })}
-        </IndexBar>
-    );
+  const handleListItem = () => {
+    navigate("/im/message");
+  };
+
+  useEffect(() => {
+    setData([...list]);
+  }, []);
+
+  return (
+    <div className={styles.chats}>
+      <PullToRefresh
+        onRefresh={async () => {
+          await sleep(1000);
+          setData([...list, ...data])
+        }}
+        renderText={(status) => {
+          return <div>{statusRecord[status]}</div>;
+        }}
+      >
+        <List className={styles.chats}>
+          {data.map((item, index) => (
+            <SwipeAction
+              key={index}
+              leftActions={leftActions}
+              rightActions={rightActions}
+            >
+              <List.Item
+                prefix={
+                  <Image
+                    src={item.avatar}
+                    style={{ borderRadius: 20 }}
+                    fit="cover"
+                    width={40}
+                    height={40}
+                  />
+                }
+                description={item.description}
+                onClick={handleListItem}
+              >
+                {item.name}
+              </List.Item>
+            </SwipeAction>
+          ))}
+        </List>
+        <InfiniteScroll loadMore={loadMore} hasMore={hasMore} />
+      </PullToRefresh>
+    </div>
+  );
 };
 
 export default Chats;
