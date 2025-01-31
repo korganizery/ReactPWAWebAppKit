@@ -1,0 +1,10 @@
+.contacts {
+    height: 100%;
+    margin-top: 75px;
+    width: 100vw;
+    :global {
+        .na{
+            background-color: red;
+        }
+    }
+}

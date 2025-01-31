@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useSubscribe } from "react-pwa-push-notifications";
 
+
+const data = {
+  publicKey: 'BH5GPho1RYRX5zjQeBf_8rBISv0Tf0IwROL1yHmfOdi2v5SHEbrsygbjYkS0VHT3m-8ifJYyjqsdhIJCTOo1J6s',
+  privateKey: 'UG188tXc-11WNUNmaSBQFfqsnZH9Qkyzgu_8aqb9a28'
+}
+
 const NotificationPrompt: React.FC = () => {
-  const [publicKey, setPublicKey] = useState<string | null>(null);
+  const [publicKey, setPublicKey] = useState<string | null>(data.publicKey);
   const [messageCount, setMessageCount] = useState<number>(0);
   
   useEffect(() => {

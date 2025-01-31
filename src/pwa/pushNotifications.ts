@@ -1,34 +1,40 @@
 export const subscribeUser = async () => {
   if ('serviceWorker' in navigator && 'PushManager' in window) {
     try {
-      // const registration = await navigator.serviceWorker.ready;
-      // const existingSubscription = await registration.pushManager.getSubscription();
+      const registration = await navigator.serviceWorker.ready;
+      const existingSubscription = await registration.pushManager.getSubscription();
 
-      // if (existingSubscription) {
-      //   // 取消现有订阅
-      //   await existingSubscription.unsubscribe();
-      //   console.log('Existing subscription unsubscribed');
-      // }
+      if (existingSubscription) {
+        // 取消现有订阅
+        await existingSubscription.unsubscribe();
+        console.log('Existing subscription unsubscribed');
+      }
 
       // const response = await fetch('http://localhost:5000/vapidPublicKey');
       // if (!response.ok) {
       //   throw new Error('Failed to fetch VAPID public key');
       // }
       // const data = await response.json();
-      // const publicKey = data.publicKey;
 
-      // const subscription = await registration.pushManager.subscribe({
-      //   userVisibleOnly: true,
-      //   applicationServerKey: urlBase64ToUint8Array(publicKey)
-      // });
+      const data = {
+        publicKey: 'BH5GPho1RYRX5zjQeBf_8rBISv0Tf0IwROL1yHmfOdi2v5SHEbrsygbjYkS0VHT3m-8ifJYyjqsdhIJCTOo1J6s',
+        privateKey: 'UG188tXc-11WNUNmaSBQFfqsnZH9Qkyzgu_8aqb9a28'
+      }
 
-      // await fetch('http://localhost:5000/subscribe', {
-      //   method: 'POST',
-      //   body: JSON.stringify(subscription),
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
-      // });
+      const publicKey = data.publicKey;
+
+      const subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicKey)
+      });
+
+      await fetch('http://localhost:5000/subscribe', {
+        method: 'POST',
+        body: JSON.stringify(subscription),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
 
       console.log('New subscription created');
     } catch (error) {

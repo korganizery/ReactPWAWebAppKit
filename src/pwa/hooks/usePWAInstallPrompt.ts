@@ -7,8 +7,13 @@ interface UsePWAInstallPromptResult {
   requestNotificationPermission: () => void;
 }
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt: () => void;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+}
+
 const usePWAInstallPrompt = (): UsePWAInstallPromptResult => {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState<boolean>(false);
   const [isPromptVisible, setIsPromptVisible] = useState<boolean>(true); // 授权通知提示
 
@@ -40,7 +45,7 @@ const usePWAInstallPrompt = (): UsePWAInstallPromptResult => {
   useEffect(() => {
     const handler = (e: Event) => {
       e.preventDefault();
-      setDeferredPrompt(e);
+      setDeferredPrompt(e as BeforeInstallPromptEvent);
       setShowInstallPrompt(true);
     };
 
