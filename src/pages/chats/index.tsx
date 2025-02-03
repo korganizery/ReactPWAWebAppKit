@@ -73,10 +73,9 @@ export default function Home() {
 
     return (
         <div className={styles.tabs} style={{padding: pathname === '/im/message' ? '0' : '45px 0 50px 0'}}>
-            <div className="body">
+            <div className={pathname === "/im/message" ? "messageBody": "body"}>
                 <Outlet />
             </div>
-
             {pathname !== '/im/message' ? (
                 <div className="bottom">
                     <TabBar safeArea activeKey={pathname} onChange={value => setRouteActive(value)}>

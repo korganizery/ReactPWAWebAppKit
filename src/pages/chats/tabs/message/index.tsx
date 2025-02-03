@@ -55,6 +55,7 @@ export default function Message() {
     return (
         <div className={styles.message}>
             <Card
+                className='admCardBox'
                 icon={<LeftOutline onClick={onLeftClick} style={{ fontSize: 25, marginLeft: 12 }} />}
                 title={<div style={{ fontWeight: 'normal' }}>卡片标题</div>}
                 extra={<MoreOutline onClick={onRightClick} style={{  fontSize: 25, marginRight: 12 }} />}
@@ -63,59 +64,49 @@ export default function Message() {
                 <div className={'content'}>
                     <List>
                         <List.Item
+                            className='itemLeft'
                             prefix={
                                 <Image
+                                    className='image'
                                     src={users[0].avatar}
-                                    style={{ borderRadius: 5, marginTop: 12 }}
                                     fit='cover'
                                     width={50}
                                     height={50}
                                 />
                             }
                             description={(
-                                <Card
-                                    style={{ borderRadius: 5, marginRight: 62, backgroundColor: '#2d2f2d', color: 'white' }}
-                                >
-                                    <div>
-                                        <p>
-                                            Used alongside an alignment keyword. Regardless of the relative sizes of the item and alignment container and whether overflow which causes data loss might happen, the given alignment value is honored.
-                                        </p>
-                                    </div>
+                                <Card>
+                                    <p>Used alongside an alignment keyword. RegarUsed alongside an alignment keyword. RegarUsed alongside an alignment keyword. RegarUsed alongside an alignment keyword. RegarUsed alongside an alignment keyword. Regar</p>
                                 </Card>
 
                             )}
                         >
-                            <div style={{ fontSize: 12, textAlign: 'left', marginLeft: 12 }}>{users[0].name}</div>
+                            <div className='userName'>{users[0].name}</div>
                         </List.Item>
                         <List.Item
+                            className='itemRight'
                             extra={
                                 <Image
+                                    className='image'
                                     src={users[0].avatar}
-                                    style={{ borderRadius: 5, marginTop: 12 }}
                                     fit='cover'
                                     width={50}
                                     height={50}
                                 />
                             }
                             description={(
-                                <Card
-                                    style={{ borderRadius: 5, marginLeft: 62, backgroundColor: 'green', color: 'white' }}
-                                >
-                                    <div>
-                                        <p>
-                                            Used alongside an alignment keyword. Regardless of the relative sizes of the item and alignment container and whether overflow which causes data loss might happen, the given alignment value is honored.
-                                        </p>
-                                    </div>
+                                <Card>
+                                   <p>Used alongside an al</p>
                                 </Card>
 
                             )}
                         >
-                            <div style={{ fontSize: 12, textAlign: 'right', marginRight: 12 }}>{users[0].name}</div>
+                            <div className='userName'>{users[0].name}</div>
                         </List.Item>
                     </List>
                 </div>
                 <div className={'footer'} onClick={e => e.stopPropagation()}>
-                    <Picker data={data} i18n={i18n} onEmojiSelect={console.log} />
+                    {/* <Picker data={data} i18n={i18n} onEmojiSelect={console.log} /> */}
                     <Button
                         color='primary'
                         onClick={() => {
