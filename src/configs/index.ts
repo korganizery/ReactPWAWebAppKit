@@ -10,6 +10,7 @@ export default {
             element: lazy(() => import('../layouts/index')),
             routes: [
                 {
+                    index: true,
                     path: "/im",
                     name: "im",
                     title: "聊天消息",
@@ -42,32 +43,7 @@ export default {
                         },
                     ],
                 },
-                /*
                 {
-                    index: true,
-                    path: "/desktop",
-                    name: 'desktop',
-                    title: 'desktop',
-                    element: lazy(() => import('../layouts/Desktop')),
-                    routes: [
-                        {
-                            index: true,
-                            path: "/list",
-                            name: 'list',
-                            title: 'list',
-                            element: lazy(() => import('../pages/desktop/list')),
-                        },
-                        {
-                            path: "/counter",
-                            name: 'Counter',
-                            title: 'Counter',
-                            element: lazy(() => import('../pages/desktop/Counter')),
-                        }
-                    ]
-                },
-                */
-                {
-                    index: true,
                     path: "/mobile",
                     name: 'mobile',
                     title: 'mobile',
@@ -88,10 +64,24 @@ export default {
                         }
                     ]
                 },
+                {
+                    path: "/user",
+                    name: 'user',
+                    title: 'user',
+                    element: lazy(() => import('../pages/user')),
+                    routes: [
+                        {
+                            index: true,
+                            path: "/signup",
+                            name: 'signup',
+                            title: 'signup',
+                            element: lazy(() => import('../pages/user/signup')),
+                        },
+                    ]
+                }
 
             ]
         },
-
         {
             path: "*",
             name: '404',
