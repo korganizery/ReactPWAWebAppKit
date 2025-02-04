@@ -19,13 +19,13 @@ export default {
                             index: true,
                             path: "/contacts",
                             name: "Contacts",
-                            title: "联系人",
+                            title: "推荐的代理",
                             element: lazy(() => import('../pages/chats/tabs/contacts')),
                         },
                         {
                             path: "/chats",
                             name: "Chats",
-                            title: "聊天",
+                            title: "对话",
                             element: lazy(() => import('../pages/chats/tabs/chats')),
                         },
                         {

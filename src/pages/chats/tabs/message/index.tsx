@@ -1,26 +1,24 @@
+import {
+  JSX,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { Input, Card, List, Image, Space } from "antd-mobile";
 import {
-  AddCircleOutline,
+  AddSquareOutline,
   AudioOutline,
   SmileOutline,
   LeftOutline,
   LocationOutline,
   MoreOutline,
- ScanningOutline,
- HandPayCircleOutline, 
- TransportQRcodeOutline,
-  AntOutline
-
 } from "antd-mobile-icons";
-import { Action } from 'antd-mobile/es/components/popover'
 import { useNavigate } from "react-router";
 
-import data from "@emoji-mart/data";
-import Picker from "@emoji-mart/react";
-import i18n from "@emoji-mart/data/i18n/zh.json";
+import useWindowSize from "../../../../hooks/useWindowSize"; // 请替换为实际的路径
+import EmojiPickers from "./EmojiPickers";
 
 import styles from "./index.module.less";
-import { JSX, useState, useRef, useEffect  } from "react";
 
 interface Item {
   id: string;
@@ -30,7 +28,7 @@ interface Item {
   name: string;
 }
 
-export const user = [
+const userList = [
   {
     id: "1",
     position: "itemLeft",
@@ -62,44 +60,105 @@ const item = {
 
 const datas = Array(rowCount).fill(item);
 
-const actions: Action[] = [
-    { key: 'scan', icon: <ScanningOutline />, text: '扫一扫' },
-    { key: 'payment', icon: <HandPayCircleOutline />, text: '付钱/收钱' },
-    { key: 'bus', icon: <TransportQRcodeOutline />, text: '乘车码' },
-    { key: 'assistant', icon: <AntOutline />, text: '智能助理' },
-  ]
-
-
-
 export default function Message() {
-  const navigate = useNavigate();
+  const refContent = useRef<HTMLDivElement>(null);
+  const refContentBox = useRef<HTMLDivElement>(null);
+  const [inputValue, setInputValue] = useState<string>(""); // 消息内容
+  const [visibleEmoji, setVisibleEmoji] = useState(false);
+ 
 
+  const navigate = useNavigate();
+  const { width, height } = useWindowSize();
+
+  // 返回事件
   const onLeftClick = () => {
-    console.log("点击了卡片左区域");
     navigate(-1);
   };
 
+  // 点击右边的事件
   const onRightClick = () => {
     console.log("点击了卡片右区域");
   };
 
+  // 渲染头像图
   const renderPrefixOrExtra = (_item: Item, isIndex: boolean): JSX.Element => (
     <Image
       className="image"
-      src={isIndex ? user[0].avatar : user[1].avatar}
+      src={isIndex ? userList[0].avatar : userList[1].avatar}
       fit="cover"
       width={50}
       height={50}
     />
   );
 
-  const [messaged, setMessaged] = useState<string>("");
+  ////输入内容 start////////////
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
+  };
+  const handleInsertEmoji = (emoji: string) => {
+    if (refContentBox.current) {
+      const inputElement = refContentBox.current.querySelector<HTMLElement>(
+        ".refInput .adm-input-element"
+      ) as HTMLInputElement;
+      if (inputElement) {
+        const start = inputElement.selectionStart;
+        const end = inputElement.selectionEnd;
+        const newText =
+          inputValue.slice(0, start!) + emoji + inputValue.slice(end!);
+        setInputValue(newText);
+        // 将光标位置设置到插入内容之后
+        inputElement.selectionStart = inputElement.selectionEnd =
+          start! + emoji.length;
+        inputElement.focus();
+      }
+    }
+  };
+  /////输入内容 end///////////
 
-  const handleOnChangeInput = (value: string) => {
-    console.log(event);
-    setMessaged(value);
-    
+  // 点击表情图标按钮事件
+  const handleSmileOutlineClick = () => {
+    setVisibleEmoji(!visibleEmoji);
+    // getDivElement(!visibleEmoji ? 340: 106);
+  };
+
+  // 获取聊天信息列表的内容区域
+  const getDivElement = (num: number) => {
+    if (refContent.current) {
+      const divElement = refContent.current.querySelector<HTMLElement>(
+        ".adm-list-body-inner"
+      );
+      if (divElement) {
+        // 在这里进行操作，例如更改文本内容
+        divElement.style.height = `${height - num}px`;
+        console.log("divElement:", divElement);
+      }
+    }
+  };
+
+  // 获取表情图的事件
+  const handleGetEmojiPickers = (emojiMsg: string) => {
+    console.log("emojiMsg", emojiMsg);
+    handleInsertEmoji(emojiMsg );
+  };
+
+  const handleOnAddEvent = () => {
+    setVisibleEmoji(false);
+  };
+
+  const handleChangeOtherEvent = () => {
+    setVisibleEmoji(!visibleEmoji);
+    getDivElement(106);
   }
+
+  useEffect(() => {
+    getDivElement(106);
+  }, []);
+
+
+  useEffect(() => {
+    getDivElement(visibleEmoji ? 340: 106 );
+  }, [visibleEmoji]);
+
 
   return (
     <div className={styles.message}>
@@ -111,7 +170,7 @@ export default function Message() {
             style={{ fontSize: 25, marginLeft: 12 }}
           />
         }
-        title={<div style={{ fontWeight: "normal" }}>卡片标题</div>}
+        title={<div style={{ fontWeight: "normal" }}>《Novalee Spicer》</div>}
         extra={
           <MoreOutline
             onClick={onRightClick}
@@ -120,7 +179,8 @@ export default function Message() {
         }
         style={{ borderRadius: 16, padding: 0 }}
       >
-        <div className={"content"}>
+        {/* 聊天内容渲染 */}
+        <div className={"content"} ref={refContent} onClick={handleChangeOtherEvent}>
           <List>
             {datas.map((item, index) => {
               const isIndex = index % 2;
@@ -143,25 +203,49 @@ export default function Message() {
             })}
           </List>
         </div>
-        <div 
-            className={"footer"} 
-            onClick={(e) => e.stopPropagation()}
-        >
-          {/* <Picker data={data} i18n={i18n} onEmojiSelect={console.log} /> */}
-          <Space style={{ '--gap': '24px' }} >
-            <AddCircleOutline fontSize={30} />
-            <Input
-                style={{width: 200}}
-                placeholder='请输入内容'
-                value={messaged}
+        {/* 底部操作的按钮 */}
+        <div className={"footer"} onClick={(e) => e.stopPropagation()}>
+          <Space style={{ "--gap": "30px" }}>
+            {/* 左边的按钮 */}
+            <div className="leftBox" onClick={handleOnAddEvent}>
+              <AddSquareOutline fontSize={30} />
+            </div>
+            {/* 输入的内容 */}
+            <div className="contentBox" ref={refContentBox}>
+              <Input
+                className="refInput"
+                value={inputValue}
                 clearable
-                onChange={handleOnChangeInput}
-            />
-            <SmileOutline fontSize={30} />
-            {messaged ?  <LocationOutline fontSize={30}/> : <AudioOutline fontSize={30} />}
+                placeholder="请输入内容"
+                onChange={handleInputChange}
+                style={{ width: width - 186 }}
+              />
+            </div>
+            {/* 右边的按钮操作 */}
+            <div className="rightBox">
+              <SmileOutline
+                onClick={handleSmileOutlineClick}
+                fontSize={30}
+                style={{ marginRight: 15 }}
+              />
+
+              {inputValue ? (
+                <LocationOutline
+                  fontSize={30}
+                  style={{ transform: "rotate(90deg)" }}
+                />
+              ) : (
+                <AudioOutline fontSize={30} />
+              )}
+            </div>
           </Space>
+          {/* 表情图 */}
+          {visibleEmoji ? (
+            <EmojiPickers change={handleGetEmojiPickers} />
+          ) : null}
         </div>
       </Card>
+        
     </div>
   );
 }
