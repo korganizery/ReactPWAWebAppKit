@@ -23,7 +23,7 @@ export default defineConfig(({mode}: UserConfig) => {
         manifest: {
           name: 'pwaapps',
           short_name: 'pwaapps',
-          description: 'PWA应用IOS/Android/H5/桌面快捷方式/通知/下载快捷方式/离线访问/缓存/PWA/PWA应用/PWA应用IOS/PWA应用Android/PWA应用H5/PWA应用桌面快捷方式/PWA应用通知/PWA应用下载快捷方式/PWA应用离线访问/PWA应用缓存',
+          description: 'PWA应用IOS/Android/H5',
           theme_color: "#000000",
           icons: [
             //添加图标， 注意路径和图像像素正确
