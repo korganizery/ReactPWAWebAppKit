@@ -14,6 +14,7 @@ export default defineConfig(({mode}: UserConfig) => {
   console.log("defineConfig: ", mode);
   
   return {
+    base: './', // 设置相对路径
     plugins: [
       react(),
       VitePWA({
@@ -32,6 +33,17 @@ export default defineConfig(({mode}: UserConfig) => {
               type: 'image/png',
             },
           ],
+          // 配置开机画面
+          start_url: '/',
+          display: 'standalone',
+          background_color: '#ffffff',
+          screenshots: [
+            {
+              src: 'screenshot.png',
+              sizes: '1080x1920',
+              type: 'image/png'
+            },
+          ]
         },
         registerType: 'autoUpdate',
         workbox: {
