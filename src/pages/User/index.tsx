@@ -11,7 +11,6 @@ export default function User() {
         <SafeArea position="top" />
       </div>
       <div>
-        <p>User</p>
         <Outlet />
       </div>
       <div style={{ background: "#ffcfac" }}>

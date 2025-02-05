@@ -57,6 +57,7 @@ const registerEventListener = async () => {
   
     event.waitUntil(promiseChain);
   });
+
   
   
   

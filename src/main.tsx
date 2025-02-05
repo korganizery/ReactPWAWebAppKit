@@ -5,6 +5,7 @@ import { Provider } from 'react-redux'
 import store from './models/store'
 import App from './App.tsx'
 import { subscribeUser } from './pwa/pushNotifications';
+import * as serviceWorkerRegistration from './pwa/serviceWorkerRegistration';
 import './styles/global.less'
 
 createRoot(document.getElementById('root')!).render(
@@ -18,3 +19,4 @@ createRoot(document.getElementById('root')!).render(
 )
 
 subscribeUser();
+serviceWorkerRegistration.register();

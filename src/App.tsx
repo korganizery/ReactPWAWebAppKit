@@ -16,7 +16,7 @@ import {
 // import enUS from 'antd-mobile/es/locales/en-US'
 import zhCN from "antd-mobile/es/locales/zh-CN";
 import { MessageFill } from "antd-mobile-icons";
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router";
 import googleLogo from "./assets/google.svg";
 import config from "./configs";
@@ -26,6 +26,7 @@ import MyPwaApps from "./pwa/components/MyPwaApps";
 import useClearCache from "./hooks/useClearCache.ts";
 
 import CalendarPickered from "./components/CalendarPickered";
+import useBadge from "./pwa/hooks/useBadge";
 
 import styles from "./App.module.less";
 
@@ -80,7 +81,8 @@ function App() {
   const navigate = useNavigate();
   const location = useLocation();
   const routes = config.routes;
-  const [props, setProps] = useState<{ [key: string]: any }>(textProps);
+  const [props, setProps] = useState(textProps);
+  const { messageCount, handlBadgeCount } = useBadge();
 
   const [enableDarkMode, setEnableDarkMode] = useState(true);
 
@@ -93,6 +95,8 @@ function App() {
       enableDarkMode ? "dark" : "light"
     );
   }, [enableDarkMode]);
+
+  useEffect(() => {}, [enableDarkMode]);
 
   // render routes
   const renderRoutes = () => {
@@ -352,6 +356,22 @@ function App() {
     <>
       <ConfigProvider locale={zhCN}>
         <PublRender />
+        <Card title="增加消息数量">
+          <h1>PWA Badge Count Demo: {messageCount}</h1>
+          <div>
+            <Button
+              color="primary"
+              onClick={() => handlBadgeCount(messageCount + 1)}
+            >
+              增加消息数量
+            </Button>
+          </div>
+          <div>
+            <Button color="danger" onClick={() => handlBadgeCount(0)}>
+              清除消息数量
+            </Button>
+          </div>
+        </Card>
         <FloatingBubbleRender />
         <main className={styles.App}>
           <Routes>{renderRoutes()}</Routes>
