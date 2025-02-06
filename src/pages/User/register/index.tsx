@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input, Image } from "antd-mobile";
-import { post, setToken } from "../../../utils/httpRequest";
+
+import useHttpRequest from "../../../hooks/useHttpRequest";
 import { useCallback } from "react";
-import { useNavigate, NavLink } from "react-router";
 
 const demoAvatarImages = [
   "https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
@@ -9,35 +9,51 @@ const demoAvatarImages = [
   "https://images.unsplash.com/photo-1542624937-8d1e9f53c1b9?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
   "https://images.unsplash.com/photo-1546967191-fdfb13ed6b1e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
 ];
+
 interface ApiResponse {
-  username: string;
+  email: string;
   password: string;
-  message: string;
-  userInfo: {
-    [key in string]: string
-  }
+  username: string;
 }
 
-export default function SignUp() {
-  const navigate = useNavigate();
+/*
+  // 1、导入
+  import useHttpRequest from '../../../hooks/useHttpRequest'; 
+  // 2、使用
+  const { post } = useHttpRequest();
+
+  // 3、调用
   const onFinish = useCallback(async (values: ApiResponse) => {
     // 用户注册:  {"email":"admin@gmail.com","password":"123456","username":"admin"}
     // console.log("用户注册: ", values);
     try {
-      const postData = await post<ApiResponse>(
-        "/auth/login",
+      const postData: ApiResponse = await post<ApiResponse>('/auth/register', values);
+      console.log('POST 请求成功:', postData);
+    } catch (err) {
+      console.error('POST 请求失败:', err);
+    }
+  }, []);
+
+ */
+
+export default function Register() {
+  const { post } = useHttpRequest();
+  const onFinish = useCallback(async (values: ApiResponse) => {
+    // 用户注册:  {"email":"admin@gmail.com","password":"123456","username":"admin"}
+    // console.log("用户注册: ", values);
+    try {
+      const postData: ApiResponse = await post<ApiResponse>(
+        "/auth/register",
         values
       );
-      console.log("POST 请求成功:", postData.userInfo);
-      setToken(postData.userInfo.token as string);
-      setTokenExpDate(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString());
-      navigate("/");
+      console.log("POST 请求成功:", postData);
     } catch (err) {
       console.error("POST 请求失败:", err);
     }
   }, []);
+
   return (
-    <div style={{ padding: 30, maxWidth: 420 }}>
+    <div style={{ padding: 30 }}>
       <Card
         title={
           <div
@@ -57,7 +73,7 @@ export default function SignUp() {
               width={48}
               height={48}
             />
-            <h3>Sign in to GitHub</h3>
+            <h3>Create your free account</h3>
           </div>
         }
         headerStyle={{
@@ -82,56 +98,57 @@ export default function SignUp() {
                 size="middle"
                 style={{ width: "100%" }}
               >
-                Sign in
+                <span>Continue</span>
+                <svg
+                  aria-hidden="true"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  version="1.1"
+                  width="16"
+                  data-view-component="true"
+                  className="octicon octicon-chevron-right"
+                >
+                  <path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"></path>
+                </svg>
               </Button>
             }
           >
             <Form.Item
-              name="username"
-              label="Username or email address"
-              rules={[{ required: true }]}
+              name="email"
+              label="Email"
+              rules={[
+                { required: true },
+                { type: "string", min: 6 },
+                { type: "email", warningOnly: true },
+              ]}
             >
-              <Input placeholder="请输入姓名" />
+              <Input placeholder="Email" />
             </Form.Item>
             <Form.Item
               name="password"
-              label={
-                <div
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  <span>Password</span>
-                  <a href="#">Forgot password?</a>
-                </div>
-              }
+              label="Password"
               rules={[{ required: true }]}
             >
-              <Input placeholder="请输入密码" />
+              <Input type={"password"} placeholder="Password" />
             </Form.Item>
+            <p>
+              Password should be at least 15 characters OR at least 8 characters
+              including a number and a lowercase letter.
+            </p>
+            <Form.Item
+              name="username"
+              label="Username"
+              rules={[{ required: true }]}
+            >
+              <Input placeholder="Username" />
+            </Form.Item>
+            <p>
+              Username may only contain alphanumeric characters or single
+              hyphens, and cannot begin or end with a hyphen.
+            </p>
           </Form>
         </div>
-      </Card>
-      <Card
-        bodyStyle={{
-          fontWeight: "normal",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <span>
-          <NavLink to="/user/signup">Sign in with a passkey</NavLink>
-        </span>
-        <p>
-          <span>New to GitHub?</span>
-          <NavLink to="/user/register">Create an account</NavLink>
-        </p>
+        <div onClick={(e) => e.stopPropagation()}></div>
       </Card>
     </div>
   );

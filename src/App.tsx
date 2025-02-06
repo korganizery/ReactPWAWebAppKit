@@ -96,7 +96,14 @@ function App() {
     );
   }, [enableDarkMode]);
 
-  useEffect(() => {}, [enableDarkMode]);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    console.log("token=====", token);
+    
+    if(token === null){
+      navigate("/user/signup");
+    }
+  }, []);
 
   // render routes
   const renderRoutes = () => {
@@ -252,6 +259,22 @@ function App() {
               />
             </Space>
           </Card>
+          <Card title="增加推送桌面图标上的消息数量">
+            <h1>PWA Badge Count Demo: {messageCount}</h1>
+            <div>
+              <Button
+                color="primary"
+                onClick={() => handlBadgeCount(messageCount + 1)}
+              >
+                增加消息数量
+              </Button>
+            </div>
+            <div>
+              <Button color="danger" onClick={() => handlBadgeCount(0)}>
+                清除消息数量
+              </Button>
+            </div>
+          </Card>
           <Card title="CalendarPicker 日历选择器">
             <CalendarPickered />
           </Card>
@@ -356,22 +379,6 @@ function App() {
     <>
       <ConfigProvider locale={zhCN}>
         <PublRender />
-        <Card title="增加消息数量">
-          <h1>PWA Badge Count Demo: {messageCount}</h1>
-          <div>
-            <Button
-              color="primary"
-              onClick={() => handlBadgeCount(messageCount + 1)}
-            >
-              增加消息数量
-            </Button>
-          </div>
-          <div>
-            <Button color="danger" onClick={() => handlBadgeCount(0)}>
-              清除消息数量
-            </Button>
-          </div>
-        </Card>
         <FloatingBubbleRender />
         <main className={styles.App}>
           <Routes>{renderRoutes()}</Routes>

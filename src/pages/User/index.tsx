@@ -1,5 +1,6 @@
 import { SafeArea } from "antd-mobile";
 import { Outlet, useLocation, useNavigate } from "react-router";
+// import ExampleApp from "../example";
 
 export default function User() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ export default function User() {
         <SafeArea position="top" />
       </div>
       <div>
+         {/* <ExampleApp /> */}
         <Outlet />
       </div>
       <div style={{ background: "#ffcfac" }}>

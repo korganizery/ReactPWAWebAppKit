@@ -46,14 +46,14 @@ export default {
                 {
                     path: "/mobile",
                     name: 'mobile',
-                    title: 'mobile',
+                    title: 'Mobile',
                     element: lazy(() => import('../layouts/Mobil')),
                     routes: [
                         {
                             index: true,
                             path: "/list",
                             name: 'list',
-                            title: 'list',
+                            title: 'List',
                             element: lazy(() => import('../pages/mobile/list')),
                         },
                         {
@@ -67,15 +67,22 @@ export default {
                 {
                     path: "/user",
                     name: 'user',
-                    title: 'user',
+                    title: 'User',
                     element: lazy(() => import('../pages/user')),
                     routes: [
                         {
                             index: true,
                             path: "/signup",
                             name: 'signup',
-                            title: 'signup',
+                            title: 'Signup',
                             element: lazy(() => import('../pages/user/signup')),
+                        },
+                        {
+                            index: true,
+                            path: "/register",
+                            name: 'register',
+                            title: 'Register',
+                            element: lazy(() => import('../pages/user/register')),
                         },
                     ]
                 }
