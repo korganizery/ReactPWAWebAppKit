@@ -1,7 +1,7 @@
-import { Button, Card, Form, Input, Image } from "antd-mobile";
-import { post, setToken } from "../../../utils/httpRequest";
+import { Button, Card, Form, Input, Image, Modal } from "antd-mobile";
 import { useCallback } from "react";
 import { useNavigate, NavLink } from "react-router";
+import { login } from "../../../services/user";
 
 const demoAvatarImages = [
   "https://images.unsplash.com/photo-1548532928-b34e3be62fc6?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ",
@@ -20,21 +20,17 @@ interface ApiResponse {
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const onFinish = useCallback(async (values: ApiResponse) => {
+  const onFinish = useCallback( async (values: ApiResponse) => {
     // 用户注册:  {"email":"admin@gmail.com","password":"123456","username":"admin"}
-    // console.log("用户注册: ", values);
-    try {
-      const postData = await post<ApiResponse>(
-        "/auth/login",
-        values
-      );
-      console.log("POST 请求成功:", postData.userInfo);
-      setToken(postData.userInfo.token as string);
-      setTokenExpDate(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString());
-      navigate("/");
-    } catch (err) {
-      console.error("POST 请求失败:", err);
-    }
+    const res  = await login(values);
+    console.log("res:", res.message);
+   
+    Modal.alert({
+      content: res.message,
+      onConfirm: () => {
+        navigate("/");
+      },
+    })
   }, []);
   return (
     <div style={{ padding: 30, maxWidth: 420 }}>

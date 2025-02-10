@@ -10,18 +10,19 @@ interface ApiResponse {
 }
 
 
-export const login = async (param: ApiResponse) => {
+export const login = async (param: ApiResponse): Promise<ApiResponse> => {
     try {
-        const postData = await post<ApiResponse>(
+        const res = await post<ApiResponse>(
           "/auth/login",
           param
         );
-        console.log("POST 请求成功:", postData.userInfo);
-        setToken(postData.userInfo.token as string);
+        console.log("POST 请求成功:", res.userInfo);
+        setToken(res.userInfo.token as string);
         setTokenExpDate(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString());
-        // navigate("/");
+        return res;
       } catch (err) {
         console.error("POST 请求失败:", err);
+        throw err; // Re-throw the error to be handled by the caller
       }
 }
 
