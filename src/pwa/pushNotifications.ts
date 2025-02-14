@@ -1,3 +1,5 @@
+import { PUBLIC_URL_API } from "../utils/httpRequest";  
+
 async function subscribeUserToPush() {
   try {
     // 获取现有订阅
@@ -16,7 +18,7 @@ async function subscribeUserToPush() {
     }
 
     //////////////////////////////
-     const response = await fetch('http://localhost:5000/vapidPublicKey');
+     const response = await fetch(`${PUBLIC_URL_API}/vapidPublicKey`);
      if (!response.ok) {
        throw new Error('Failed to fetch VAPID public key');
      }

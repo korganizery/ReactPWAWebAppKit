@@ -1,4 +1,4 @@
-const baseUrl = "http://localhost:5000";
+export const PUBLIC_URL_API = "http://localhost:5000";
 export class HttpError extends Error {
   response: Response;
 
@@ -76,7 +76,7 @@ const removeToken = () => {
 /////////Token  Get//////////////////////////////////////////////////////
 
 const refreshToken = async () => {
-  const response = await fetch(`${baseUrl}/refreshToken`, {
+  const response = await fetch(`${PUBLIC_URL_API}/refreshToken`, {
     method: "POST",
   });
   const data = await response.json();
@@ -122,7 +122,7 @@ const httpRequest = async <T>(
   options.signal = controller.signal;
 
   try {
-    const response = await fetch(`${baseUrl}${url}`, {
+    const response = await fetch(`${PUBLIC_URL_API}${url}`, {
       ...options,
       method,
       headers: filteredHeaders,

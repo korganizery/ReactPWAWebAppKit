@@ -25,21 +25,21 @@ const registerEventListener = async () => {
         url: data.url || '/'
       }
     };
-  
+
     event.waitUntil(
       self.registration.showNotification(data.title || 'Default title', options)
     );
   });
-  
+
   self.addEventListener('notificationclick', (event: NotificationEvent) => {
     const urlToOpen = new URL(event.notification.data.url, self.location.origin).href;
-  
+
     const promiseChain = self.clients.matchAll({
       type: 'window',
       includeUncontrolled: true
     }).then((windowClients) => {
       let matchingClient: WindowClient | null = null;
-  
+
       for (let i = 0; i < windowClients.length; i++) {
         const windowClient = windowClients[i];
         if (windowClient.url === urlToOpen) {
@@ -47,29 +47,29 @@ const registerEventListener = async () => {
           break;
         }
       }
-  
+
       if (matchingClient) {
         return matchingClient.focus();
       } else {
         return self.clients.openWindow(urlToOpen);
       }
     });
-  
+
     event.waitUntil(promiseChain);
   });
 
-  
-  
-  
+
+
+
   self.addEventListener('activate', (event: ExtendableEvent) => {
     console.log('Service worker activating...', event);
   });
-  
+
   self.addEventListener('redundant', (event) => {
     console.log('Service worker activating...', event);
   });
-  
-  
+
+
   self.addEventListener('fetch', (event) => {
     console.log('Fetching:', event.request.url);
     const url = new URL(event.request.url);
